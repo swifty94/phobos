@@ -8,7 +8,7 @@ set -e
 
 f_install() {
 	USR=$(whoami)
-	URL=''
+	URL='https://raw.githubusercontent.com/swifty94/phobos/master/phobos'
 	cd /usr/local/bin/
 	wget $URL -O phobos
 	chmod +x phobos
