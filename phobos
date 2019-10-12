@@ -1,0 +1,118 @@
+#!/bin/bash/
+###################################
+#   Server monitor + TG update 	  #
+###################################
+#   Created by Kirill Rudenko	  #
+###################################
+
+#
+#Linux distro check + required stuff install
+#
+if grep ^NAME /etc/*release | grep CentOS > /dev/null 2>&1; then
+	DISTRO="CentOS"
+	yum install sysstat -y 
+elif cat /etc/*release | grep ^NAME | grep Red > /dev/null 2>&1; then
+	DISTRO="RedHat"
+	yum install sysstat -y 
+elif cat /etc/*release | grep ^NAME | grep Fedora > /dev/null 2>&1; then
+    DISTRO="Fedora"
+    yum install sysstat -y 
+ elif cat /etc/*release | grep ^NAME | grep Ubuntu > /dev/null 2>&1; then
+    DISTRO="Ubuntu"
+    apt install sysstat -y 
+ elif cat /etc/*release | grep ^NAME | grep Debian > /dev/null 2>&1; then
+ 	DISTRO="Debian"
+ 	apt install sysstat -y 
+fi
+#
+#variables
+#
+TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA' 
+CPUALL=$(mpstat -P ALL |awk '{print $3}' |sed -n 4p)
+RAM=$(free -mh |awk '{print $3}' |sed -n 2p)
+SPACEU=$(du $HOME -sh |sort -n |uniq -c |awk '{print $2}')
+SPACET=$(df $HOME -h |awk '{print $2}' |sed 's/Size//g;/^$/d;')
+LOGINS=$(who | cut -d' ' -f1 | sort | uniq)
+NETSTAT=$(netstat -tulpn |grep -c ESTABLISHED)
+MES='Hello'
+MES2='Welcome back'
+MES3='Currently logged users on the server are: $LOGINS'
+MES4='Number of establoshed connections to the server $NETSTAT'
+MES5='Disc space used $SPACEU from $SPACET in total'
+MES6='$RAM of RAM is used'
+MES7='Detailed CPU statistics will be sent via TXT documents shortly'
+##
+##	functions list 
+##
+
+updates() {
+
+##
+## last API call + TG user ID 
+##	
+	FILENAME='updates.json'
+
+	if [ -f $FILENAME ]; then
+		CURRENT_API_CALL_NUMS=$(wc -l updates.json |awk '{ print $1 }')
+	else 
+		wget https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates -O updates.json > /dev/null 2>&1
+	fi
+	
+	if [ $CURRENT_API_CALL_NUMS != 1 ]; then
+		rm -rf updates.json
+		wget https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates -O updates.json > /dev/null 2>&1
+	fi
+##
+##
+## actions depending on the result
+##
+##
+	UPDATED_ID=$(tail -n 1 updates.json | grep "/start" |grep "chat" |grep "id" |grep -Eo "[-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9]" |sed -n '1p')
+	MATCH=$(grep -c $UPDATED_ID $FILENAME)
+	if [ $MATCH > 1] ; then
+		curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES2" > /dev/null 2>&1
+	else
+		curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES" > /dev/null 2>&1
+	fi
+
+}
+
+show_statistics() {
+	if [ -f core_load.txt ]; then
+		rm -rf core_load.txt
+	else
+	mpstat -P ALL > /stat/core_load.txt
+fi
+
+if [ -f cpu_detailed.txt ]; then
+	rm -rf cpu_detailed.txt
+	else
+	top -c -n 1 -b > /stat/cpu_detailed.txt
+fi
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES3" > /dev/null 2>&1
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES4" > /dev/null 2>&1
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES5" > /dev/null 2>&1
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES6" > /dev/null 2>&1
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES7" > /dev/null 2>&1
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHATID  -F file="@stat/core_load.txt"  -F caption="" > /dev/null 2>&1; 
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHATID  -F file="@stat/cpu_detailed.txt"  -F caption="" > /dev/null 2>&1; 
+}
+
+statistics_standalone() {
+while true; do
+	updates
+	show_statistics
+	sleep 3600
+done
+}
+
+
+statistics_on_request() {
+
+}
+
+main() {
+	statistics_standalone
+}
+
+main

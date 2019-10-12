@@ -1,0 +1,29 @@
+#!/bin/bash/
+###################################
+#   Server monitor + TG update 	  #
+###################################
+#   Created by Kirill Rudenko	  #
+###################################
+set -e 
+
+f_install() {
+	USR=$(whoami)
+	URL=''
+	cd /usr/local/bin/
+	wget $URL -O phobos
+	chmod +x phobos
+	chown $USR: phobos
+	cd && rm -rf phobos_install
+}
+
+echo "Let me download the Phobos bot for you"
+sleep 5
+f_install
+sleep 5
+if [ -f /usr/local/bin/phobos ]; then 
+	echo "Phobos is installed. Enjoy using it"
+else
+	echo "Somethin went wrong. Please contact the creator"
+fi
+
+
