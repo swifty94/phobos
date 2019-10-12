@@ -78,7 +78,13 @@ updates() {
 }
 
 show_statistics() {
-	if [ -f core_load.txt ]; then
+if [ -d $HOME/stat ]; then
+	STATDIR='stat'
+	else
+	mkdir stat
+fi
+
+if [ -f core_load.txt ]; then
 		rm -rf core_load.txt
 	else
 	mpstat -P ALL > /stat/core_load.txt
@@ -89,6 +95,7 @@ if [ -f cpu_detailed.txt ]; then
 	else
 	top -c -n 1 -b > /stat/cpu_detailed.txt
 fi
+
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES3" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES4" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$UPDATED_ID -d text="$MES5" > /dev/null 2>&1
