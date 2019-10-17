@@ -8,19 +8,28 @@ set -e
 
 f_install() {
 	USR=$(whoami)
-	URL='https://raw.githubusercontent.com/swifty94/phobos/master/phobos'
+	URL1='https://raw.githubusercontent.com/swifty94/phobos/master/phobos'
+	URL2='https://raw.githubusercontent.com/swifty94/phobos/master/phobos_standalone'
 	if [ -d $HOME/phobos ]; then
 		cd $HOME/phobos
 		wget $URL -O phobos
-		chmod +x phobos
+		wget $URL -O phobos_standalone
+		chmod +x phobos 
+		chmod +x phobos_standalone
 		chown $USR: phobos
+		chown $USR: phobos_standalone
+		(crontab -l ; echo "* * * * * /bin/bash $HOME/phobos/phobos_standalone") | crontab -
 		cd && rm -rf phobos_install
 	else 
 		mkdir $HOME/phobos
 		cd $HOME/phobos
 		wget $URL -O phobos
-		chmod +x phobos
+		wget $URL -O phobos_standalone
+		chmod +x phobos 
+		chmod +x phobos_standalone
 		chown $USR: phobos
+		chown $USR: phobos_standalone
+		(crontab -l ; echo "* * * * * /bin/bash $HOME/phobos/phobos_standalone") | crontab -
 		cd && rm -rf phobos_install
 	fi
 
