@@ -9,21 +9,57 @@ set -e
 f_install() {
 	USR=$(whoami)
 	URL='https://raw.githubusercontent.com/swifty94/phobos/master/phobos'
-	cd /usr/local/bin/
-	wget $URL -O phobos
-	chmod +x phobos
-	chown $USR: phobos
-	cd && rm -rf phobos_install
+	if [ -d $HOME/phobos ]; then
+		cd $HOME/phobos
+		wget $URL -O phobos
+		chmod +x phobos
+		chown $USR: phobos
+		cd && rm -rf phobos_install
+	else 
+		mkdir $HOME/phobos
+		cd $HOME/phobos
+		wget $URL -O phobos
+		chmod +x phobos
+		chown $USR: phobos
+		cd && rm -rf phobos_install
+	fi
+
+	sleep 3
+	echo "Please specify the desired notification interval"
+	echo "1 - every 30 mins"
+	echo "2 - every hour"
+	echo "3 - every 2 hours"
+	echo "4 - once per day at 10am"
+	sleep 3
+	echo "Please input one of the following [1/2/3/4]"
+	sleep 3
+	read INTERVAL
+	case $INTERVAL in
+		1 )
+		(crontab -l ; echo "*/30 * * * * /bin/bash $HOME/phobos/phobos") | crontab -
+			;;
+		2 )
+		(crontab -l ; echo "0 * * * * /bin/bash $HOME/phobos/phobos") | crontab -
+			;;
+		3 )
+		(crontab -l ; echo "0 */2 * * * /bin/bash $HOME/phobos/phobos") | crontab -
+			;;
+		4 )
+		(crontab -l ; echo "0 10 * * * /bin/bash $HOME/phobos/phobos") | crontab -
+			;;
+		* )
+		echo "Please use [1/2/3/4]"
+			;;
+	esac
 }
 
-echo "Let me download the Phobos bot for you"
+echo "Let me download and install the Phobos bot for you"
 sleep 5
 f_install
 sleep 5
-if [ -f /usr/local/bin/phobos ]; then 
+
+if [ -f $HOME/phobos/phobos ]; then 
 	echo "Phobos is installed. Enjoy using it"
 else
 	echo "Somethin went wrong. Please contact the creator"
 fi
-
-
