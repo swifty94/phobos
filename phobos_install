@@ -12,8 +12,8 @@ f_install() {
 	URL2='https://raw.githubusercontent.com/swifty94/phobos/master/phobos_standalone'
 	if [ -d $HOME/phobos ]; then
 		cd $HOME/phobos
-		wget $URL -O phobos
-		wget $URL -O phobos_standalone
+		wget $URL1 -O phobos
+		wget $URL2 -O phobos_standalone
 		chmod +x phobos 
 		chmod +x phobos_standalone
 		chown $USR: phobos
@@ -23,8 +23,8 @@ f_install() {
 	else 
 		mkdir $HOME/phobos
 		cd $HOME/phobos
-		wget $URL -O phobos
-		wget $URL -O phobos_standalone
+		wget $URL1 -O phobos
+		wget $URL2 -O phobos_standalone
 		chmod +x phobos 
 		chmod +x phobos_standalone
 		chown $USR: phobos
