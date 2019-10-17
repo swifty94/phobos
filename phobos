@@ -6,34 +6,14 @@
 ###################################
 
 #
-#Linux distro check + required stuff install
-#
-if [ -d /usr/bin/mpstat ]; then
-	echo "OK" > /dev/null 2>&1;
-elif grep ^NAME /etc/*release | grep CentOS > /dev/null 2>&1; then
-	DISTRO="CentOS"
-	sudo yum install sysstat -y 
-elif cat /etc/*release | grep ^NAME | grep Red > /dev/null 2>&1; then
-	DISTRO="RedHat"
-	sudo yum install sysstat -y 
-elif cat /etc/*release | grep ^NAME | grep Fedora > /dev/null 2>&1; then
-    DISTRO="Fedora"
-    sudo yum install sysstat -y 
- elif cat /etc/*release | grep ^NAME | grep Ubuntu > /dev/null 2>&1; then
-    DISTRO="Ubuntu"
-    sudo apt install sysstat -y 
- elif cat /etc/*release | grep ^NAME | grep Debian > /dev/null 2>&1; then
- 	DISTRO="Debian"
- 	sudo apt install sysstat -y 
-fi
-#
 #variables
 #
-TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA' 
+TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA'
+APIURL='https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates' 
 USR=$(whoami)
 TIME=$(date '+%H:%M:%S')
-CPUALL=$(mpstat -P ALL |awk '{print $3}' |sed -n 4p)
 RAM=$(free -mh |awk '{print $3}' |sed -n 2p)
+RAMT=$(free -mh |grep Mem |awk '{print $2}')
 SPACEU=$(du $HOME -sh |sort -n |uniq -c |awk '{print $2}')
 SPACET=$(df $HOME -h |awk '{print $2}' |sed 's/Size//g;/^$/d;')
 LOGINS=$(who | cut -d' ' -f1 | sort | uniq)
@@ -45,9 +25,8 @@ MES3="Currently logged users on the server are: $LOGINS"
 MES4="Number of established connections to the server $NETSTATG"
 MES5="Number of connections to the database $NETSTATDB"
 MES6="Disc space used $SPACEU from $SPACET in total"
-MES7="$RAM of RAM is used"
-MES8="Load on all CPU cores in total - $CPUALL"
-MES9="Here is the detailed CPU cores load"
+MES7="$RAM of RAM is used from $RAMT in total"
+MES9="Here is the detailed top output"
 MES10="Here are top 10 CPU consuming processes that are currently running"
 ##
 ##	functions list 
@@ -61,9 +40,9 @@ show_statistics() {
 
 	if [ -f $FILENAME ]; then
 		rm -rf $FILENAME
-		wget https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates -O $FILENAME > /dev/null 2>&1
+		wget $APIURL -O $FILENAME > /dev/null 2>&1
 	else 
-		wget https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates -O $FILENAME > /dev/null 2>&1
+		wget $APIURL -O $FILENAME > /dev/null 2>&1
 	fi
 	CHAT_ID=$(tail -n 1 updates.json |grep "chat" |grep "id" |grep "/start" |grep -Eo "[-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9]" |sed -n '1p')
 ##
@@ -72,12 +51,11 @@ show_statistics() {
 ##
 ##	
 	
-if [ -f core_load.txt ]; then
-	rm -rf core_load.txt
-	mpstat -P ALL > core_load.txt
+if [ -f top.txt ]; then
+	rm -rf top.txt
+	top -b -n 1 > top.txt
 	else
-	mpstat -P ALL > core_load.txt
-fi
+	top -b -n 1 > top.txt
 
 if [ -f process.txt ]; then
 	rm -rf process.txt
@@ -95,7 +73,7 @@ fi
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES7" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES8" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES9" > /dev/null 2>&1
-	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@core_load.txt"  > /dev/null 2>&1; 
+	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@top.txt"  > /dev/null 2>&1; 
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES10" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@process.txt" > /dev/null 2>&1; 
 
