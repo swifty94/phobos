@@ -25,14 +25,14 @@ f_alive() {
 
 	## MySQL is alive?
 
-	if (( $(ps aux |grep -v grep |egrep '(mariadb|mysqld)' |wc -l) = 0 )); then
+	if [ $(ps aux |grep -v grep |egrep '(mariadb|mysqld)' |wc -l) = 0 ]; then
 			curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES1" > /dev/null 2>&1
 	fi
 
 	## Apache is alive?
 
-	if (( $(ps aux |grep -v grep |egrep '(httpd|apache)' |wc -l) = 0 )); then
-			curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES1" > /dev/null 2>&1
+	if [ $(ps aux |grep -v grep |egrep '(httpd|apache)' |wc -l) = 0 ]; then
+			curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES2" > /dev/null 2>&1
 	fi
 }
 
