@@ -8,8 +8,8 @@
 #
 #variables
 #
-TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA'
-APIURL='https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates' 
+TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA' #your token goes here
+APIURL='https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates' #your API updates URL goes here
 USR=$(whoami)
 TIME=$(date '+%H:%M:%S')
 RAM=$(free -mh |awk '{print $3}' |sed -n 2p)
@@ -29,7 +29,7 @@ MES7="$RAM of RAM is used from $RAMT in total"
 MES9="Here is the detailed top output"
 MES10="Here are top 10 CPU consuming processes that are currently running"
 ##
-##	functions list 
+##	main function
 ##
 
 show_statistics() {
@@ -44,7 +44,7 @@ show_statistics() {
 	else 
 		wget $APIURL -O $FILENAME > /dev/null 2>&1
 	fi
-	CHAT_ID=$(tail -n 1 updates.json |grep "chat" |grep "id" |grep "/start" |grep -Eo "[-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9]" |sed -n '1p')
+	CHAT_ID=$(tail -n 1 $FILENAME |grep "chat" |grep "id" |grep "/start" |grep -Eo "[-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9][-0-9]" |sed -n '1p')
 ##
 ##
 ## sending the stats
@@ -77,6 +77,8 @@ fi
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES10" > /dev/null 2>&1
 	curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@process.txt" > /dev/null 2>&1; 
 
+	rm -rf top.txt
+	rm -rf process.txt
 }
 
 
