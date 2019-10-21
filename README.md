@@ -61,4 +61,4 @@ master 3.1 /usr/bin/pulseaudio\
 master 2.8 /snap/whatsdesk/17/whatsdesk\
 master 2.3 /usr/lib/firefox/firefox\
 master 2.3 /usr/lib/firefox/firefox\
-master 2.3 /proc/self/exe\
+master 2.3 /proc/self/exe
