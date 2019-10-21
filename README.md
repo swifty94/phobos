@@ -5,7 +5,7 @@ The Phobos telegramm bot is completely Bash-written one.
 Once it is installed you will be able to receive the notification regarding the server performance at the chosen time frame.
 Regular updates will be regarding the following points:
 - currently logged users
-- number of established connections to the server and the database
+- number of established connections to the server and to the the database
 - RAM usage
 - Occupied disc space
 - CPU usage and top 10 processes which are consuing the CPU
