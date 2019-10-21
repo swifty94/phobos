@@ -52,13 +52,13 @@ Content of top file is just the regular top command output.
 
 Content of process file example:
 
-master 7.3 /usr/lib/firefox/firefox
-master 5.3 /usr/lib/firefox/firefox
-master 5.1 /usr/bin/gnome-shell
-master 3.6 Telegram
-master 3.1 /usr/lib/xorg/Xorg
-master 3.1 /usr/bin/pulseaudio
-master 2.8 /snap/whatsdesk/17/whatsdesk
-master 2.3 /usr/lib/firefox/firefox
-master 2.3 /usr/lib/firefox/firefox
-master 2.3 /proc/self/exe
+master 7.3 /usr/lib/firefox/firefox\
+master 5.3 /usr/lib/firefox/firefox\
+master 5.1 /usr/bin/gnome-shell\
+master 3.6 Telegram\
+master 3.1 /usr/lib/xorg/Xorg\
+master 3.1 /usr/bin/pulseaudio\
+master 2.8 /snap/whatsdesk/17/whatsdesk\
+master 2.3 /usr/lib/firefox/firefox\
+master 2.3 /usr/lib/firefox/firefox\
+master 2.3 /proc/self/exe\
