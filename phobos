@@ -56,6 +56,7 @@ if [ -f top.txt ]; then
 	top -b -n 1 > top.txt
 	else
 	top -b -n 1 > top.txt
+fi
 
 if [ -f process.txt ]; then
 	rm -rf process.txt
