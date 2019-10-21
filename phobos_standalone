@@ -64,7 +64,7 @@ live_stat() {
 	#CPU load high?
 	CPU=$(top -bn2 | grep "Cpu(s)" |sed -n '2p' |awk '{print $2}' |sed 's/,/./g')
 	MES4="ALERT! CPU load is CRITICAL! Current load - $CPU at $TIME!"
-	if (( $(echo "$CPU > 50" |bc) )); then 
+	if (( $(echo "$CPU > 75" |bc) )); then 
 		curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendMessage -d chat_id=$CHAT_ID -d text="$MES4" > /dev/null 2>&1
 		curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@top.txt"  > /dev/null 2>&1; 
 		curl -s -X POST https://api.telegram.org/bot{$TOKEN}/sendDocument?chat_id=$CHAT_ID  -F document="@process.txt" > /dev/null 2>&1; 
@@ -75,4 +75,3 @@ live_stat() {
 }
 
 live_stat
-
