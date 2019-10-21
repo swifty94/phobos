@@ -8,8 +8,8 @@
 #
 #variables
 #
-TOKEN='648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA' #your token goes here
-APIURL='https://api.telegram.org/bot648758527:AAEDP8DuUjYpKvfBuysTfIHsNDDLjZ58KBA/getUpdates' #your API updates URL goes here
+TOKEN='' #your token goes here
+APIURL='' #your API updates URL goes here
 USR=$(whoami)
 TIME=$(date '+%H:%M:%S')
 RAM=$(free -mh |awk '{print $3}' |sed -n 2p)
