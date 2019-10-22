@@ -1,22 +1,22 @@
 
-The Phobos telegramm bot is completely Bash-written one.
+The Phobos telegram bot is completely a Bash-written one.
 --------------------------------------------------------
 
 Once it is installed you will be able to receive the notification regarding the server performance at the chosen time frame.
 Regular updates will be regarding the following points:
 - currently logged users
-- number of established connections to the server and to the the database
+- number of established connections to the server and to the database
 - RAM usage
 - Occupied disc space
-- CPU usage and top 10 processes which are consuing the CPU
+- CPU usage and top 10 processes which are consuming the CPU
 
 Alert updates in case:
 - Apache / MySQL / VSFTPD services are down
-- CPU usage are more then 75% on the server
+- The CPU usage is more than 75% on the server
 
 Pre-requirements
 -----------------
-- Register your Telegramm bot here https://telegram.me/botfather
+- Register your Telegram bot here https://telegram.me/botfather
 More details can be checked here - https://core.telegram.org/bots#6-botfather
 
 - Obtain your token as described in the link above + your API URL to getUpdates method which looks like:
@@ -44,11 +44,11 @@ Examples of usage and output:
 
 ![](https://raw.githubusercontent.com/swifty94/phobos/master/usg/alert.png)
 
-- regular update from bot 
+- a regular update from bot 
 
 ![](https://raw.githubusercontent.com/swifty94/phobos/master/usg/upd.png)
 
-Content of top file is just the regular top command output.
+The content of the top file is just the regular top command output.
 
 Content of process file example:
 
