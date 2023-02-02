@@ -1,6 +1,6 @@
 
-The Phobos telegram bot is completely a Bash-written one.
---------------------------------------------------------
+The Phobos telegram bot is completely a Bash-written one. Hence Linux systems only are supported.
+--------------------------------------------------------------------------------------------------
 
 Once it is installed you will be able to receive the notification regarding the server performance at the chosen time frame.
 Regular updates will be regarding the following points:
